@@ -1,4 +1,4 @@
-const API_URL = "https://finansal-os-backend-production.up.railway.app";
+const API_URL = "https://finansal-os-backend-production-8c16.up.railway.app";
 
 document.getElementById('calculateBtn').addEventListener('click', async () => {
     const btn = document.getElementById('calculateBtn');
@@ -17,6 +17,11 @@ document.getElementById('calculateBtn').addEventListener('click', async () => {
             body: JSON.stringify(payload)
         });
 
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Hesaplama hatası');
+        }
+
         const res = await response.json();
         
         document.getElementById('resultCard').classList.remove('hidden');
@@ -26,7 +31,8 @@ document.getElementById('calculateBtn').addEventListener('click', async () => {
         document.getElementById('note').innerText = res.data_note;
         
     } catch (error) {
-        alert("Bağlantı Hatası: Backend yanıt vermiyor!");
+        console.error("Hata:", error);
+        alert("Hata: " + error.message);
     } finally {
         btn.innerText = "Sistemi Çalıştır";
     }
